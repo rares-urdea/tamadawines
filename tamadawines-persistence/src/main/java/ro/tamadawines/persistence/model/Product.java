@@ -4,6 +4,16 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "products")
+@NamedQueries({
+        @NamedQuery(
+                name = "Product.findAll",
+                query = "SELECT p FROM Product p"
+        ),
+        @NamedQuery(
+                name = "Product.findByName",
+                query = "Select p FROM Product p WHERE p.name LIKE :nm"
+        )
+})
 public class Product {
     private int id;
     private String name;

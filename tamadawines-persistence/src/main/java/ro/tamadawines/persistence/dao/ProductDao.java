@@ -5,6 +5,8 @@ import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 import ro.tamadawines.persistence.model.Product;
 
+import java.util.List;
+
 /**
  *
  */
@@ -26,5 +28,11 @@ public class ProductDao extends AbstractDAO<Product>{
         return persist(product);
     }
 
+    public List<Product> findAll() {
+        return list(namedQuery("Product.findAll"));
+    }
 
+    public Product findByName(String productName) {
+        return uniqueResult(namedQuery("Product.findByName").setParameter("nm", productName));
+    }
 }

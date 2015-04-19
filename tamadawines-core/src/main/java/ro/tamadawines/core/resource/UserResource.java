@@ -24,7 +24,8 @@ public class UserResource {
     @GET
     @UnitOfWork
     @Path("/getAll")
-    public List<User> getUserByFirstName() {
+    @Produces("application/json")
+    public List<User> getAllUsers() {
         return userDAO.findAll();
     }
 

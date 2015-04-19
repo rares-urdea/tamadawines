@@ -1,6 +1,7 @@
 package ro.tamadawines.core.main;
 
 import io.dropwizard.Application;
+import io.dropwizard.auth.basic.BasicAuthProvider;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
@@ -46,7 +47,9 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     @Override
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
         UserDAO userDAO = new UserDAO(hibernateBundle.getSessionFactory());
+//        SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();
         environment.jersey().register(userDAO);
         environment.jersey().register(new UserResource(userDAO));
+//        environment.jersey().register(new BasicAuthProvider<>(simpleAuthenticator, "Basic"));
     }
 }
