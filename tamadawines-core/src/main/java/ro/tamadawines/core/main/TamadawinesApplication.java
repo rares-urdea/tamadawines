@@ -53,15 +53,15 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
 
     @Override
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
-        UserDAO userDAO = new UserDAO(hibernateBundle.getSessionFactory());
+        UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
 //        SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();
 //        environment.jersey().register(new BasicAuthProvider<>(simpleAuthenticator, "Basic"));
         environment.jersey().register(productDao);
         environment.jersey().register(new ProductResource(productDao));
 
-        environment.jersey().register(userDAO);
-        environment.jersey().register(new UserResource(userDAO));
+        environment.jersey().register(userDao);
+        environment.jersey().register(new UserResource(userDao));
 
         configureCors(environment);
     }

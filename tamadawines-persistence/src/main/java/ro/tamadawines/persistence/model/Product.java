@@ -15,7 +15,11 @@ import javax.persistence.*;
         )
 })
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     private String taste;
     private String color;
@@ -26,8 +30,6 @@ public class Product {
     private Short stock;
     private Float price;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -67,7 +69,7 @@ public class Product {
     }
 
     @Basic
-    @Column(name = "grape_variety", nullable = true, insertable = true, updatable = true, length = 50)
+    @Column(name = "grapeVariety", nullable = true, insertable = true, updatable = true, length = 50)
     public String getGrapeVariety() {
         return grapeVariety;
     }

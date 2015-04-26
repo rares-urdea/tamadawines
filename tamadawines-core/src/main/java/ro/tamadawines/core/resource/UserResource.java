@@ -15,10 +15,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private UserDAO userDAO;
+    private UserDAO userDao;
 
-    public UserResource(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserResource(UserDAO userDao) {
+        this.userDao = userDao;
     }
 
     @GET
@@ -26,21 +26,29 @@ public class UserResource {
     @Path("/getAll")
     @Produces("application/json")
     public List<User> getAllUsers() {
-        return userDAO.findAll();
+        return userDao.findAll();
     }
 
     @GET
     @UnitOfWork
     @Path("/fn")
     public User getUserByFirstName(@QueryParam("firstName") String firstName) {
-        return userDAO.findByFirstName(firstName);
+        return userDao.findByFirstName(firstName);
     }
 
     @GET
     @UnitOfWork
     @Path("/ln")
     public User getUserByLastName(@QueryParam("lastName") String lastName) {
-        return userDAO.findByFirstName(lastName);
+        return userDao.findByFirstName(lastName);
     }
 
+    @POST
+    @Path("/addUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @UnitOfWork
+    public User createUser(User user) {
+        return userDao.createUser(user);
+    }
 }
