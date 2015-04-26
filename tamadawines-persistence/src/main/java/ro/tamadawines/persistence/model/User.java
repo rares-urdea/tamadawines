@@ -2,9 +2,6 @@ package ro.tamadawines.persistence.model;
 
 import javax.persistence.*;
 
-/**
- * Created by axes on 3/11/2015.
- */
 @Entity
 @Table(name = "users")
 @NamedQueries({
