@@ -1,7 +1,7 @@
 package ro.tamadawines.core.resource;
 
 import io.dropwizard.hibernate.UnitOfWork;
-import ro.tamadawines.persistence.dao.UserDAO;
+import ro.tamadawines.persistence.dao.UserDao;
 import ro.tamadawines.persistence.model.User;
 
 import javax.ws.rs.*;
@@ -15,9 +15,9 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private UserDAO userDao;
+    private UserDao userDao;
 
-    public UserResource(UserDAO userDao) {
+    public UserResource(UserDao userDao) {
         this.userDao = userDao;
     }
 

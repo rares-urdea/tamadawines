@@ -10,7 +10,7 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.resource.UserResource;
 import ro.tamadawines.persistence.dao.ProductDao;
-import ro.tamadawines.persistence.dao.UserDAO;
+import ro.tamadawines.persistence.dao.UserDao;
 import ro.tamadawines.persistence.model.Address;
 import ro.tamadawines.persistence.model.Product;
 import ro.tamadawines.persistence.model.User;
@@ -53,7 +53,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
 
     @Override
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
-        UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
+        UserDao userDao = new UserDao(hibernateBundle.getSessionFactory());
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
 //        SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();
 //        environment.jersey().register(new BasicAuthProvider<>(simpleAuthenticator, "Basic"));
