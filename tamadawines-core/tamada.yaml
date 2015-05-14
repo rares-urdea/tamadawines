@@ -23,6 +23,9 @@ database:
 #    type: http
 #    port: 8080
 
+emailStuff:
+  adminAddress: "contact@tamadawines.ro"
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000

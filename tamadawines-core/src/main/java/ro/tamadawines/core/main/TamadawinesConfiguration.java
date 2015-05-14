@@ -16,6 +16,11 @@ public class TamadawinesConfiguration extends Configuration{
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
+    @JsonProperty
+    @Valid
+    @NotNull
+    private EmailStuff emailStuff = new EmailStuff();
+
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
         return database;
@@ -24,5 +29,20 @@ public class TamadawinesConfiguration extends Configuration{
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
         this.database = dataSourceFactory;
+    }
+
+    public EmailStuff getEmailStuff(){
+        return this.emailStuff;
+    }
+
+    public static class EmailStuff {
+
+        @NotNull
+        @JsonProperty
+        private String adminAddress;
+
+        public String getAdminAddress() {
+            return adminAddress;
+        }
     }
 }
