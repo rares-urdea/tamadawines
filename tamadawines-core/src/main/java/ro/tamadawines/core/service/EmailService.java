@@ -65,10 +65,7 @@ public class EmailService {
             throws IOException, MessagingException {
         Gmail service = getGmailService();
         String user = "me";
-        MimeMessage mail = createEmail(to, from, subject, bodyText);
-        mail.setReplyTo(new Address[] {
-                new InternetAddress(senderAddress)
-        });
+        MimeMessage mail = createEmail(to, from, senderAddress, subject, bodyText);
         return sendMessage(service, user, mail);
     }
 
@@ -82,7 +79,7 @@ public class EmailService {
      * @return MimeMessage to be used to send email.
      * @throws javax.mail.MessagingException
      */
-    public static MimeMessage createEmail(String to, String from, String subject, String bodyText)
+    public static MimeMessage createEmail(String to, String from, String senderAddress, String subject, String bodyText)
             throws MessagingException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
@@ -91,8 +88,11 @@ public class EmailService {
 
         email.setFrom(new InternetAddress(from));
         email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(to));
+        email.setReplyTo(new Address[] {
+                new InternetAddress(senderAddress)
+        });
         email.setSubject(subject);
-        email.setText(bodyText);
+        email.setText(bodyText, "utf-8", "html");
         return email;
     }
 
