@@ -317,4 +317,30 @@ public class Product {
         result = 31 * result + (tasteNotes != null ? tasteNotes.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", producer='" + producer + '\'' +
+                ", appellation='" + appellation + '\'' +
+                ", grapeVariety='" + grapeVariety + '\'' +
+                ", year=" + year +
+                ", colour='" + colour + '\'' +
+                ", taste='" + taste + '\'' +
+                ", bottleSize=" + bottleSize +
+                ", alcohol=" + alcohol +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", discount=" + discount +
+                ", featured=" + featured +
+                ", prizesWon='" + prizesWon + '\'' +
+                ", image='" + image + '\'' +
+                ", thumb='" + thumb + '\'' +
+                ", description='" + description + '\'' +
+                ", tasteNotes='" + tasteNotes + '\'' +
+                '}';
+    }
 }

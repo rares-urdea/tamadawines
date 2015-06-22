@@ -57,6 +57,7 @@ public class ProductResource {
     @Path("/addProduct")
     @UnitOfWork
     public Product addProduct(Product product) {
+        LOGGER.debug("Entered addProduct with target product: {}", product);
         return productDao.createProduct(product);
     }
 
@@ -64,6 +65,7 @@ public class ProductResource {
     @Path("/updateProduct")
     @UnitOfWork
     public Product updateProduct(Product product) {
+        LOGGER.debug("Entered updateProduct with target product: {}", product);
         return productDao.updateProduct(product);
     }
 
@@ -71,9 +73,12 @@ public class ProductResource {
     @Path("/deleteProduct")
     @UnitOfWork
     public CrudResponse removeProduct(Product product) {
+        LOGGER.debug("Entered removeProduct with target product: {}", product);
         if (productDao.deleteProduct(product)) {
+            LOGGER.debug("Success");
             return new CrudResponse(CrudStatus.SUCCESS);
         } else {
+            LOGGER.debug("Failure");
             return new CrudResponse(CrudStatus.FAILURE);
         }
     }
@@ -94,9 +99,11 @@ public class ProductResource {
             if (current.equals(Optional.<Product>absent())) {
                 unavailableProducts.add(p);
                 hasUnavailable = true;
+                LOGGER.debug("Unavailable products found");
             } else if (current.get().getStock() < p.getQuantity()) {
                 unavailableProducts.add(new ProductDto(p.getId(), current.get().getName(), current.get().getStock()));
                 availChange = true;
+                LOGGER.debug("Availability has changed for some products");
             }
         }
 
@@ -118,6 +125,7 @@ public class ProductResource {
         }
 
         sellResponse = sellResponseAssembler.buildSuccessResponse(shoppingOrder.getProducts());
+        LOGGER.debug("Exited sellProducts with response: {}", sellResponse);
         return sellResponse;
     }
 }

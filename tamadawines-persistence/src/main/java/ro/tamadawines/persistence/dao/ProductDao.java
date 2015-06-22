@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ro.tamadawines.persistence.model.Product;
 
 import java.util.List;
@@ -12,6 +14,9 @@ import java.util.List;
  *
  */
 public class ProductDao extends AbstractDAO<Product>{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductDao.class);
+
     /**
      * Creates a new DAO with a given session provider.
      *
@@ -26,6 +31,7 @@ public class ProductDao extends AbstractDAO<Product>{
     }
 
     public Product createProduct(Product product) {
+        LOGGER.debug("Entered createProduct with target object: {}", product);
         return persist(product);
     }
 
@@ -38,16 +44,19 @@ public class ProductDao extends AbstractDAO<Product>{
     }
 
     public Product updateProduct(Product product) {
+        LOGGER.debug("Entered updateProduct with target object: {}", product);
         return persist(product);
     }
 
     public boolean deleteProduct(Product product) {
+        LOGGER.debug("Entered deleteProduct with target object: {}", product);
         Optional<Product> productOptional = findById(product.getId());
         if (productOptional.equals(Optional.<Product>absent())) {
             return false;
         } else {
             Query query = namedQuery("Product.delete").setParameter("id", product.getId());
             query.executeUpdate();
+            LOGGER.debug("Executed Product.delete query");
             return true;
         }
     }
