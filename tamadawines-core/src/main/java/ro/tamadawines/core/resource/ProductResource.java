@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
 import ro.tamadawines.core.service.SellResponseAssemblerService;
+import ro.tamadawines.core.status.model.CrudResponse;
+import ro.tamadawines.core.status.model.CrudStatus;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.model.Product;
@@ -68,8 +70,12 @@ public class ProductResource {
     @POST
     @Path("/deleteProduct")
     @UnitOfWork
-    public Product removeProduct(Product product) {
-        return productDao.deleteProduct(product);
+    public CrudResponse removeProduct(Product product) {
+        if (productDao.deleteProduct(product)) {
+            return new CrudResponse(CrudStatus.SUCCESS);
+        } else {
+            return new CrudResponse(CrudStatus.FAILURE);
+        }
     }
 
     @POST

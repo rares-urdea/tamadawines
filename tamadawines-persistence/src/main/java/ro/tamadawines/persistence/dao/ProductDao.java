@@ -2,6 +2,7 @@ package ro.tamadawines.persistence.dao;
 
 import com.google.common.base.Optional;
 import io.dropwizard.hibernate.AbstractDAO;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import ro.tamadawines.persistence.model.Product;
 
@@ -40,13 +41,14 @@ public class ProductDao extends AbstractDAO<Product>{
         return persist(product);
     }
 
-    public Product deleteProduct(Product product) {
+    public boolean deleteProduct(Product product) {
         Optional<Product> productOptional = findById(product.getId());
         if (productOptional.equals(Optional.<Product>absent())) {
-            return null;
+            return false;
         } else {
-            uniqueResult(namedQuery("Product.delete").setParameter("id", product.getId()));
-            return productOptional.get();
+            Query query = namedQuery("Product.delete").setParameter("id", product.getId());
+            query.executeUpdate();
+            return true;
         }
     }
 }

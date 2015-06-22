@@ -46,8 +46,8 @@ logging:
   # Specific thresholds
   loggers:
     org.hibernate.SQL: OFF
-    ro.tamadawines.core: DEBUG
-    ro.tamadawines.persistence: DEBUG
+    ro.tamadawines.core: INFO
+    ro.tamadawines.persistence: INFO
 
   # Appenders settings
   appenders:
