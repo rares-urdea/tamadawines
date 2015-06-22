@@ -11,6 +11,7 @@ import ro.tamadawines.core.resource.EmailResource;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.resource.UserResource;
 import ro.tamadawines.core.service.EmailService;
+import ro.tamadawines.core.service.SellResponseAssemblerService;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.dao.UserDAO;
 import ro.tamadawines.persistence.model.Address;
@@ -57,10 +58,11 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
         UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
-//        SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();
-//        environment.jersey().register(new BasicAuthProvider<>(simpleAuthenticator, "Basic"));
+        SellResponseAssemblerService sellResponseAssemblerService = new SellResponseAssemblerService();
+
         environment.jersey().register(productDao);
-        environment.jersey().register(new ProductResource(productDao));
+        environment.jersey().register(sellResponseAssemblerService);
+        environment.jersey().register(new ProductResource(productDao, sellResponseAssemblerService));
 
         environment.jersey().register(userDao);
         environment.jersey().register(new UserResource(userDao));

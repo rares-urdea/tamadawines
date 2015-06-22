@@ -40,16 +40,51 @@ server:
 # Logging settings.
 logging:
 
-  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  # Global allowed threshold
   level: INFO
 
-  # Logger-specific levels.
+  # Specific thresholds
   loggers:
+    org.hibernate.SQL: OFF
+    ro.tamadawines.core: DEBUG
+    ro.tamadawines.persistence: DEBUG
 
-    # Sets the level for 'com.example.app' to DEBUG.
-    com.example.app: DEBUG
-
-    org.hibernate.SQL: ALL
-
+  # Appenders settings
   appenders:
+
+    # Console appender; Used for development purposes, comment in production
     - type: console
+      threshold: DEBUG
+      logFormat: "%-5p [%d{ISO8601}] %c: %m%n%rEx{short}"
+
+    # Error appender
+    - type: file
+      threshold: WARN
+      currentLogFilename: ./logs/error.log
+      archive: true
+      archivedLogFilenamePattern: ./logs/error-%d.log.zip
+      archivedFileCount: 50
+     #timeZone:
+
+      # Comment out for enabling default full stack trace logging
+      # Add specific timezone in the form of [%d{...,timeZone}] if needed
+      logFormat: "%-5p [%d{ISO8601}] %c: %m%n%nopex"
+
+      # Uncomment for short exception stack trace logging
+      #logFormat: "%-5p [%d{ISO8601}] %c: %m%n%rEx{short}"
+
+    # Application appender
+    - type: file
+      threshold: DEBUG
+      currentLogFilename: ./logs/application.log
+      archive: true
+      archivedLogFilenamePattern: ./logs/application-%d.log.zip
+      archivedFileCount: 50
+     #timeZone:
+
+      # Comment out for enabling default full stack trace logging
+      # Add specific timezone in the form of [%d{...,timeZone}] if needed
+      logFormat: "%-5p [%d{ISO8601}] %c: %m%n%nopex"
+
+      # Uncomment for short exception stack trace logging
+      #logFormat: "%-5p [%d{ISO8601}] %c: %m%n%rEx{short}"

@@ -35,4 +35,18 @@ public class ProductDao extends AbstractDAO<Product>{
     public Product findByName(String productName) {
         return uniqueResult(namedQuery("Product.findByName").setParameter("nm", productName));
     }
+
+    public Product updateProduct(Product product) {
+        return persist(product);
+    }
+
+    public Product deleteProduct(Product product) {
+        Optional<Product> productOptional = findById(product.getId());
+        if (productOptional.equals(Optional.<Product>absent())) {
+            return null;
+        } else {
+            uniqueResult(namedQuery("Product.delete").setParameter("id", product.getId()));
+            return productOptional.get();
+        }
+    }
 }
