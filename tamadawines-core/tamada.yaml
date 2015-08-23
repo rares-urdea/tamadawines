@@ -25,6 +25,8 @@ database:
 
 emailStuff:
   adminAddress: "contact@tamadawines.ro"
+  gmailUserAccount: "skl.columbus"
+  gmailPassword: "bv698181"
 
 server:
 #  softNofileLimit: 1000

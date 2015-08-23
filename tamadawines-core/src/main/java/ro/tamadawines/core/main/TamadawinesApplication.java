@@ -67,7 +67,8 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
         environment.jersey().register(userDao);
         environment.jersey().register(new UserResource(userDao));
 
-        environment.jersey().register(new EmailResource(new EmailService(), tamadawinesConfiguration));
+        environment.jersey().register(new EmailResource(new EmailService(tamadawinesConfiguration),
+                tamadawinesConfiguration));
         configureCors(environment);
     }
 

@@ -3,6 +3,8 @@ package ro.tamadawines.core.resource;
 import io.dropwizard.hibernate.UnitOfWork;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.service.EmailService;
+import ro.tamadawines.core.status.model.Status;
+import ro.tamadawines.core.status.model.StatusDescriptor;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.GET;
@@ -30,19 +32,40 @@ public class EmailResource {
     @GET
     @UnitOfWork
     @Path("/contactForm")
-    public String sendContactUsEmail(@QueryParam("senderEmail") String senderEmail,
+    public StatusDescriptor sendContactUsEmail(@QueryParam("senderEmail") String senderEmail,
                                    @QueryParam("senderName") String senderName,
-                                   @QueryParam("body") String body) {
+                                   @QueryParam("body") String body,
+                                   @QueryParam("subject") String subject) {
 
         String adminAddress = configuration.getEmailStuff().getAdminAddress();
-        String subject = "Contact form received from: " + senderName;
 
         try {
-            return emailService.sendEmail(adminAddress, adminAddress, senderEmail, subject, body);
+            if (emailService.sendEmail(adminAddress, adminAddress, senderEmail, subject, body)) {
+                return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
+            }
         } catch (IOException | MessagingException e) {
-            e.printStackTrace();
+            return Status.UTTER_FAILURE.getStatusDescriptor();
         }
+        return Status.UTTER_FAILURE.getStatusDescriptor();
+    }
 
-        return null;
+    @GET
+    @UnitOfWork
+    @Path("/sendMail")
+    public StatusDescriptor sendEmail(@QueryParam("senderEmail") String senderEmail,
+                            @QueryParam("body") String body,
+                            @QueryParam("recipientAddress") String recipientAddress,
+                            @QueryParam("subject") String subject) {
+
+        String adminAddress = configuration.getEmailStuff().getAdminAddress();
+
+        try {
+            if (emailService.sendEmail(recipientAddress, adminAddress, senderEmail, subject, body)) {
+                return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
+            }
+        } catch (IOException | MessagingException e) {
+            return Status.UTTER_FAILURE.getStatusDescriptor();
+        }
+        return Status.UTTER_FAILURE.getStatusDescriptor();
     }
 }

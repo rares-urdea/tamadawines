@@ -41,8 +41,24 @@ public class TamadawinesConfiguration extends Configuration{
         @JsonProperty
         private String adminAddress;
 
+        @NotNull
+        @JsonProperty
+        private String gmailUserAccount;
+
+        @NotNull
+        @JsonProperty
+        private String gmailPassword;
+
         public String getAdminAddress() {
             return adminAddress;
+        }
+
+        public String getGmailUserAccount() {
+            return gmailUserAccount;
+        }
+
+        public String getGmailPassword() {
+            return gmailPassword;
         }
     }
 }
