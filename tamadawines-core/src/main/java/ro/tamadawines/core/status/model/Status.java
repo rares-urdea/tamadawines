@@ -3,6 +3,7 @@ package ro.tamadawines.core.status.model;
 public enum Status {
     SUCCESS(new StatusDescriptor("Products successfully sold", 201)),
     UTTER_FAILURE(new StatusDescriptor("Something failed horribly. Blame Rajesh.", 404)),
+    EMAIL_EXCEPTION(new StatusDescriptor("Email Service Error - IOException || MessagingException", 405)),
     AVAILABILITY_CHANGE(new StatusDescriptor("Availability has changed while you were slacking off. " +
             "Move quick or die fast.", 301)),
     PRODUCT_NOT_FOUND(new StatusDescriptor("Some of the products you're looking for have not been found. " +

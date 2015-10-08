@@ -1,15 +1,18 @@
 package ro.tamadawines.core.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
 
 public class EmailService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     private TamadawinesConfiguration configuration;
 
@@ -46,6 +49,7 @@ public class EmailService {
             Transport transport = session.getTransport("smtp");
             transport.connect(props.getProperty("mail.smtp.host"), props.getProperty("mail.smtp.user"),
                     props.getProperty("mail.smtp.password"));
+
             transport.sendMessage(message, message.getAllRecipients());
 
         } catch (MessagingException e) {

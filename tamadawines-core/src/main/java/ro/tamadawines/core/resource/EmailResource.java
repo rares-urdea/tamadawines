@@ -44,7 +44,7 @@ public class EmailResource {
                 return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
             }
         } catch (IOException | MessagingException e) {
-            return Status.UTTER_FAILURE.getStatusDescriptor();
+            return Status.EMAIL_EXCEPTION.getStatusDescriptor();
         }
         return Status.UTTER_FAILURE.getStatusDescriptor();
     }
@@ -64,7 +64,7 @@ public class EmailResource {
                 return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
             }
         } catch (IOException | MessagingException e) {
-            return Status.UTTER_FAILURE.getStatusDescriptor();
+            return Status.EMAIL_EXCEPTION.getStatusDescriptor();
         }
         return Status.UTTER_FAILURE.getStatusDescriptor();
     }
