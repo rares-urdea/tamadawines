@@ -47,7 +47,7 @@ logging:
 
   # Specific thresholds
   loggers:
-    org.hibernate: OFF
+    org.hibernate: WARN
     ro.tamadawines.core: INFO
     ro.tamadawines.persistence: INFO
 
