@@ -8,10 +8,10 @@ database:
   driverClass: com.mysql.jdbc.Driver
 
   # the username
-  user: root
+  user: your-user
 
   # the password
-  password: @Mysqllogin17
+  password: your-pass
 
   # the JDBC URL
   url: jdbc:mysql://localhost:3306/tamadawines
@@ -24,9 +24,9 @@ database:
 #    port: 8080
 
 emailStuff:
-  adminAddress: "contact@tamadawines.ro"
-  gmailUserAccount: "skl.columbus"
-  gmailPassword: "bv698181"
+  adminAddress: "admin-email"
+  gmailUserAccount: "gmail-user"
+  gmailPassword: "gmail-pass"
 
 server:
 #  softNofileLimit: 1000
