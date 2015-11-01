@@ -11,7 +11,7 @@ database:
   user: root
 
   # the password
-  password: bsn2332
+  password: @Mysqllogin17
 
   # the JDBC URL
   url: jdbc:mysql://localhost:3306/tamadawines

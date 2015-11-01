@@ -40,6 +40,22 @@ public class ProductDto {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProductDto)) return false;
+        ProductDto that = (ProductDto) o;
+        return id.equals(that.id) && name.equals(that.name) && quantity.equals(that.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + quantity.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "ProductDto{" +
                 "id=" + id +
