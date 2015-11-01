@@ -49,7 +49,7 @@ logging:
   loggers:
     org.hibernate: WARN
     ro.tamadawines.core: INFO
-    ro.tamadawines.persistence: INFO
+    ro.tamadawines.persistence: WARN
 
   # Appenders settings
   appenders:
