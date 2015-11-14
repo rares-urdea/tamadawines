@@ -12,6 +12,15 @@ public class ClientData {
     public ClientData() {
     }
 
+    public ClientData(String name, String phoneNumber, String email, String county, String city, String address) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.county = county;
+        this.city = city;
+        this.address = address;
+    }
+
     public String getName() {
         return name;
     }

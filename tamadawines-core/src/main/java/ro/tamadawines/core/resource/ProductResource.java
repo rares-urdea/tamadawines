@@ -41,7 +41,7 @@ public class ProductResource {
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Product> getAllProducts() {
-        LOGGER.debug("Entered getAllProducts");
+        LOGGER.info("Listing all products");
         return productDao.findAll();
     }
 
@@ -99,21 +99,21 @@ public class ProductResource {
             if (current.equals(Optional.<Product>absent())) {
                 unavailableProducts.add(p);
                 hasUnavailable = true;
-                LOGGER.debug("Unavailable products found");
+                LOGGER.warn("Unavailable products found");
             } else if (current.get().getStock() < p.getQuantity()) {
                 unavailableProducts.add(new ProductDto(p.getId(), current.get().getName(), current.get().getStock()));
                 availChange = true;
-                LOGGER.debug("Availability has changed for some products");
+                LOGGER.warn("Availability has changed for some products");
             }
         }
 
         if (hasUnavailable) {
             sellResponse = sellResponseAssembler.buildProductsNotFoundResponse(unavailableProducts);
-            LOGGER.debug("Exited sellProducts with response: {}", sellResponse);
+            LOGGER.warn("Some products were unavailable, exiting with response: {}", sellResponse);
             return sellResponse;
         } else if (availChange) {
             sellResponse = sellResponseAssembler.buildAvailChangeResponse(unavailableProducts);
-            LOGGER.debug("Exited sellProducts with response: {}", sellResponse);
+            LOGGER.warn("Avail has changed for some products, exiting with response: {}", sellResponse);
             return sellResponse;
         }
 
@@ -125,7 +125,7 @@ public class ProductResource {
         }
 
         sellResponse = sellResponseAssembler.buildSuccessResponse(shoppingOrder.getProducts());
-        LOGGER.debug("Exited sellProducts with response: {}", sellResponse);
+        LOGGER.info("SELL successful, exiting with response: {}", sellResponse);
         return sellResponse;
     }
 }
