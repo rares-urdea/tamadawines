@@ -1,4 +1,4 @@
-package ro.tamadawines.core.service;
+package ro.tamadawines.core.factory;
 
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.status.model.SellResponse;
@@ -6,12 +6,11 @@ import ro.tamadawines.core.status.model.Status;
 
 import java.util.List;
 
-public class SellResponseAssemblerService {
+public final class SellResponseFactory {
 
-    public SellResponseAssemblerService() {
-    }
+    private SellResponseFactory() {}
 
-    public SellResponse buildSuccessResponse(List<ProductDto> products) {
+    public static SellResponse buildSuccessResponse(List<ProductDto> products) {
         SellResponse sellResponse = new SellResponse();
         sellResponse.setProducts(products);
         sellResponse.setStatus(Status.SUCCESS);
@@ -19,7 +18,7 @@ public class SellResponseAssemblerService {
         return sellResponse;
     }
 
-    public SellResponse buildAvailChangeResponse(List<ProductDto> productsWithNoAvail) {
+    public static SellResponse buildAvailChangeResponse(List<ProductDto> productsWithNoAvail) {
         SellResponse sellResponse = new SellResponse();
         sellResponse.setProducts(productsWithNoAvail);
         sellResponse.setStatus(Status.AVAILABILITY_CHANGE);
@@ -27,14 +26,14 @@ public class SellResponseAssemblerService {
         return sellResponse;
     }
 
-    public SellResponse buildUtterFailureResponse() {
+    public static SellResponse buildUtterFailureResponse() {
         SellResponse sellResponse = new SellResponse();
         sellResponse.setStatus(Status.UTTER_FAILURE);
 
         return sellResponse;
     }
 
-    public SellResponse buildProductsNotFoundResponse(List<ProductDto> unavailableProducts) {
+    public static SellResponse buildProductsNotFoundResponse(List<ProductDto> unavailableProducts) {
         SellResponse sellResponse = new SellResponse();
         sellResponse.setProducts(unavailableProducts);
         sellResponse.setStatus(Status.PRODUCT_NOT_FOUND);

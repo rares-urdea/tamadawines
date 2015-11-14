@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
-import ro.tamadawines.core.service.SellResponseAssemblerService;
+import ro.tamadawines.core.factory.SellResponseFactory;
 import ro.tamadawines.core.status.model.CrudResponse;
 import ro.tamadawines.core.status.model.CrudStatus;
 import ro.tamadawines.core.status.model.SellResponse;
@@ -29,11 +29,8 @@ public class ProductResource {
 
     private ProductDao productDao;
 
-    private SellResponseAssemblerService sellResponseAssembler;
-
-    public ProductResource(ProductDao productDao, SellResponseAssemblerService sellResponseAssembler) {
+    public ProductResource(ProductDao productDao) {
         this.productDao = productDao;
-        this.sellResponseAssembler = sellResponseAssembler;
     }
 
     @GET
@@ -108,11 +105,11 @@ public class ProductResource {
         }
 
         if (hasUnavailable) {
-            sellResponse = sellResponseAssembler.buildProductsNotFoundResponse(unavailableProducts);
+            sellResponse = SellResponseFactory.buildProductsNotFoundResponse(unavailableProducts);
             LOGGER.warn("Some products were unavailable, exiting with response: {}", sellResponse);
             return sellResponse;
         } else if (availChange) {
-            sellResponse = sellResponseAssembler.buildAvailChangeResponse(unavailableProducts);
+            sellResponse = SellResponseFactory.buildAvailChangeResponse(unavailableProducts);
             LOGGER.warn("Avail has changed for some products, exiting with response: {}", sellResponse);
             return sellResponse;
         }
@@ -124,7 +121,7 @@ public class ProductResource {
             productDao.updateProduct(current);
         }
 
-        sellResponse = sellResponseAssembler.buildSuccessResponse(shoppingOrder.getProducts());
+        sellResponse = SellResponseFactory.buildSuccessResponse(shoppingOrder.getProducts());
         LOGGER.info("SELL successful, exiting with response: {}", sellResponse);
         return sellResponse;
     }
