@@ -13,7 +13,7 @@ import java.util.List;
 /**
  *
  */
-public class ProductDao extends AbstractDAO<Product>{
+public class ProductDao extends AbstractDAO<Product> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductDao.class);
 

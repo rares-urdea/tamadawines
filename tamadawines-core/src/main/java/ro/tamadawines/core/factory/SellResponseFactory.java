@@ -8,7 +8,8 @@ import java.util.List;
 
 public final class SellResponseFactory {
 
-    private SellResponseFactory() {}
+    private SellResponseFactory() {
+    }
 
     public static SellResponse buildSuccessResponse(List<ProductDto> products) {
         SellResponse sellResponse = new SellResponse();

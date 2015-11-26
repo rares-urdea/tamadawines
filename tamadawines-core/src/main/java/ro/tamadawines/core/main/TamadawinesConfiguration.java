@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by axes on 2/22/2015.
  */
-public class TamadawinesConfiguration extends Configuration{
+public class TamadawinesConfiguration extends Configuration {
 
     @Valid
     @NotNull
@@ -31,7 +31,7 @@ public class TamadawinesConfiguration extends Configuration{
         this.database = dataSourceFactory;
     }
 
-    public EmailStuff getEmailStuff(){
+    public EmailStuff getEmailStuff() {
         return this.emailStuff;
     }
 

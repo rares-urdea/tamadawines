@@ -27,7 +27,7 @@ import java.util.EnumSet;
  * Application Main Class.
  */
 public class TamadawinesApplication extends Application<TamadawinesConfiguration> {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         new TamadawinesApplication().run(args);
     }
 
@@ -75,7 +75,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     /**
      * Configure CORS filter for cross origin requests
      *
-     * @param environment   The {@code Environment}
+     * @param environment The {@code Environment}
      */
     private void configureCors(Environment environment) {
         FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORS", CrossOriginFilter.class);

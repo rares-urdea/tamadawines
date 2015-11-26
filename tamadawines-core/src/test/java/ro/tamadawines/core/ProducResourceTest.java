@@ -1,5 +1,6 @@
 package ro.tamadawines.core;
 
+import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,12 +10,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
 import ro.tamadawines.core.resource.ProductResource;
-import ro.tamadawines.core.factory.SellResponseFactory;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.core.status.model.Status;
 import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
-import com.google.common.base.Optional;
+import ro.tamadawines.persistence.model.Counter;
 import ro.tamadawines.persistence.model.Product;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -91,6 +91,9 @@ public class ProducResourceTest {
         when(productDao.findById(1)).thenReturn(Optional.fromNullable(productA));
         when(productDao.findById(2)).thenReturn(Optional.fromNullable(productB));
         when(productDao.findById(3)).thenReturn(Optional.fromNullable(productC));
+        when(counterDao.getByName(anyString())).thenReturn(new Counter() {{
+            setValue(1l);
+        }});
     }
 
     @Test

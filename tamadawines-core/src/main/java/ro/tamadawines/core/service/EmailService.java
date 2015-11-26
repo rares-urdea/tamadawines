@@ -40,7 +40,7 @@ public class EmailService {
             message.setSubject(subject);
             message.setFrom(fromAddr);
             message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            message.setReplyTo(new Address[] {
+            message.setReplyTo(new Address[]{
                     new InternetAddress(senderAddress)
             });
 
