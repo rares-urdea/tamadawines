@@ -11,10 +11,11 @@ import ro.tamadawines.core.resource.EmailResource;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.resource.UserResource;
 import ro.tamadawines.core.service.EmailService;
-import ro.tamadawines.core.factory.SellResponseFactory;
+import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
-import ro.tamadawines.persistence.dao.UserDAO;
+import ro.tamadawines.persistence.dao.UserDao;
 import ro.tamadawines.persistence.model.Address;
+import ro.tamadawines.persistence.model.Counter;
 import ro.tamadawines.persistence.model.Product;
 import ro.tamadawines.persistence.model.User;
 
@@ -31,7 +32,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     }
 
     private final HibernateBundle<TamadawinesConfiguration> hibernateBundle =
-            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class) {
+            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class, Counter.class) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(TamadawinesConfiguration configuration) {
                     return configuration.getDataSourceFactory();
@@ -56,11 +57,12 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
 
     @Override
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
-        UserDAO userDao = new UserDAO(hibernateBundle.getSessionFactory());
+        UserDao userDao = new UserDao(hibernateBundle.getSessionFactory());
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
+        CounterDao counterDao = new CounterDao(hibernateBundle.getSessionFactory());
 
         environment.jersey().register(productDao);
-        environment.jersey().register(new ProductResource(productDao));
+        environment.jersey().register(new ProductResource(productDao, counterDao));
 
         environment.jersey().register(userDao);
         environment.jersey().register(new UserResource(userDao));

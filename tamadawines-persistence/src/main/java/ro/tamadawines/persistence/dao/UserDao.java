@@ -10,13 +10,13 @@ import java.util.List;
 /**
  *
  */
-public class UserDAO extends AbstractDAO<User> {
+public class UserDao extends AbstractDAO<User> {
     /**
      * Creates a new DAO with a given session provider.
      *
      * @param sessionFactory a session provider
      */
-    public UserDAO(SessionFactory sessionFactory) {
+    public UserDao(SessionFactory sessionFactory) {
         super(sessionFactory);
     }
 

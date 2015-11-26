@@ -10,7 +10,9 @@ import ro.tamadawines.core.factory.SellResponseFactory;
 import ro.tamadawines.core.status.model.CrudResponse;
 import ro.tamadawines.core.status.model.CrudStatus;
 import ro.tamadawines.core.status.model.SellResponse;
+import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
+import ro.tamadawines.persistence.model.Counter;
 import ro.tamadawines.persistence.model.Product;
 
 import javax.ws.rs.*;
@@ -29,8 +31,11 @@ public class ProductResource {
 
     private ProductDao productDao;
 
-    public ProductResource(ProductDao productDao) {
+    private CounterDao counterDao;
+
+    public ProductResource(ProductDao productDao, CounterDao counterDao) {
         this.productDao = productDao;
+        this.counterDao = counterDao;
     }
 
     @GET
@@ -38,7 +43,11 @@ public class ProductResource {
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Product> getAllProducts() {
-        LOGGER.info("Listing all products");
+        counterDao.increment(Counter.COUNTER_NAME.LISTINGS.string());
+        Long count = counterDao.getByName(Counter.COUNTER_NAME.LISTINGS.string()).getValue();
+        if (count % 10 == 0) {
+            LOGGER.info("List call count at: {}", count);
+        }
         return productDao.findAll();
     }
 
@@ -62,7 +71,7 @@ public class ProductResource {
     @Path("/updateProduct")
     @UnitOfWork
     public Product updateProduct(Product product) {
-        LOGGER.debug("Entered updateProduct with target product: {}", product);
+        LOGGER.info("Updating product: {}", product);
         return productDao.updateProduct(product);
     }
 
@@ -70,12 +79,10 @@ public class ProductResource {
     @Path("/deleteProduct")
     @UnitOfWork
     public CrudResponse removeProduct(Product product) {
-        LOGGER.debug("Entered removeProduct with target product: {}", product);
+        LOGGER.warn("Removing product: {}", product);
         if (productDao.deleteProduct(product)) {
-            LOGGER.debug("Success");
             return new CrudResponse(CrudStatus.SUCCESS);
         } else {
-            LOGGER.debug("Failure");
             return new CrudResponse(CrudStatus.FAILURE);
         }
     }
@@ -85,6 +92,11 @@ public class ProductResource {
     @UnitOfWork
     public SellResponse sellProducts(ShoppingOrder shoppingOrder) {
         LOGGER.debug("Entered sellProducts with shoppingOrder: {}", shoppingOrder);
+
+        Long count = counterDao.getByName(Counter.COUNTER_NAME.SELL_SUCCESS.string()).getValue();
+        if (count % 10 == 0) {
+            LOGGER.info("Successful SELL count at: {}", count);
+        }
 
         SellResponse sellResponse;
         List<ProductDto> unavailableProducts = new ArrayList<>();
@@ -106,10 +118,12 @@ public class ProductResource {
 
         if (hasUnavailable) {
             sellResponse = SellResponseFactory.buildProductsNotFoundResponse(unavailableProducts);
+            counterDao.increment(Counter.COUNTER_NAME.SELL_FAILURE.string());
             LOGGER.warn("Some products were unavailable, exiting with response: {}", sellResponse);
             return sellResponse;
         } else if (availChange) {
             sellResponse = SellResponseFactory.buildAvailChangeResponse(unavailableProducts);
+            counterDao.increment(Counter.COUNTER_NAME.SELL_FAILURE.string());
             LOGGER.warn("Avail has changed for some products, exiting with response: {}", sellResponse);
             return sellResponse;
         }
@@ -122,6 +136,7 @@ public class ProductResource {
         }
 
         sellResponse = SellResponseFactory.buildSuccessResponse(shoppingOrder.getProducts());
+        counterDao.increment(Counter.COUNTER_NAME.SELL_SUCCESS.string());
         LOGGER.info("SELL successful, exiting with response: {}", sellResponse);
         return sellResponse;
     }

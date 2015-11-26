@@ -12,6 +12,7 @@ import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.factory.SellResponseFactory;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.core.status.model.Status;
+import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
 import com.google.common.base.Optional;
 import ro.tamadawines.persistence.model.Product;
@@ -47,6 +48,9 @@ public class ProducResourceTest {
 
     @Mock
     private ProductDao productDao;
+    @Mock
+    private CounterDao counterDao;
+
     private ProductResource productResource;
 
     @BeforeClass
@@ -82,7 +86,7 @@ public class ProducResourceTest {
 
     @Before
     public void setup() {
-        productResource = new ProductResource(productDao);
+        productResource = new ProductResource(productDao, counterDao);
 
         when(productDao.findById(1)).thenReturn(Optional.fromNullable(productA));
         when(productDao.findById(2)).thenReturn(Optional.fromNullable(productB));
