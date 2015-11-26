@@ -63,7 +63,7 @@ public class ProductResource {
     @Path("/addProduct")
     @UnitOfWork
     public Product addProduct(Product product) {
-        LOGGER.debug("Entered addProduct with target product: {}", product);
+        LOGGER.info("Adding product: {}", product);
         return productDao.createProduct(product);
     }
 
