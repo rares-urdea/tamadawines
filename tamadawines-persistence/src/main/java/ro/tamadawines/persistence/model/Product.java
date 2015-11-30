@@ -163,6 +163,18 @@ public class Product {
         this.price = price;
     }
 
+    private float oldPrice;
+
+    @Basic
+    @javax.persistence.Column(name = "oldPrice", nullable = true, insertable = true, updatable = true, precision = 0)
+    public float getOldPrice() {
+        return oldPrice;
+    }
+
+    public void setOldPrice(float oldPrice) {
+        this.oldPrice = oldPrice;
+    }
+
     private int stock;
 
     @Basic
@@ -185,18 +197,6 @@ public class Product {
 
     public void setDiscount(int discount) {
         this.discount = discount;
-    }
-
-    private byte featured;
-
-    @Basic
-    @javax.persistence.Column(name = "featured", nullable = false, insertable = true, updatable = true)
-    public byte getFeatured() {
-        return featured;
-    }
-
-    public void setFeatured(byte featured) {
-        this.featured = featured;
     }
 
     private String prizesWon;
@@ -260,65 +260,6 @@ public class Product {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Product product = (Product) o;
-
-        if (Float.compare(product.alcohol, alcohol) != 0) return false;
-        if (bottleSize != product.bottleSize) return false;
-        if (discount != product.discount) return false;
-        if (featured != product.featured) return false;
-        if (id != product.id) return false;
-        if (Float.compare(product.price, price) != 0) return false;
-        if (stock != product.stock) return false;
-        if (appellation != null ? !appellation.equals(product.appellation) : product.appellation != null)
-            return false;
-        if (colour != null ? !colour.equals(product.colour) : product.colour != null) return false;
-        if (description != null ? !description.equals(product.description) : product.description != null)
-            return false;
-        if (grapeVariety != null ? !grapeVariety.equals(product.grapeVariety) : product.grapeVariety != null)
-            return false;
-        if (image != null ? !image.equals(product.image) : product.image != null) return false;
-        if (name != null ? !name.equals(product.name) : product.name != null) return false;
-        if (prizesWon != null ? !prizesWon.equals(product.prizesWon) : product.prizesWon != null) return false;
-        if (producer != null ? !producer.equals(product.producer) : product.producer != null) return false;
-        if (subtitle != null ? !subtitle.equals(product.subtitle) : product.subtitle != null) return false;
-        if (taste != null ? !taste.equals(product.taste) : product.taste != null) return false;
-        if (tasteNotes != null ? !tasteNotes.equals(product.tasteNotes) : product.tasteNotes != null) return false;
-        if (thumb != null ? !thumb.equals(product.thumb) : product.thumb != null) return false;
-        if (year != null ? !year.equals(product.year) : product.year != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (subtitle != null ? subtitle.hashCode() : 0);
-        result = 31 * result + (producer != null ? producer.hashCode() : 0);
-        result = 31 * result + (appellation != null ? appellation.hashCode() : 0);
-        result = 31 * result + (grapeVariety != null ? grapeVariety.hashCode() : 0);
-        result = 31 * result + (year != null ? year.hashCode() : 0);
-        result = 31 * result + (colour != null ? colour.hashCode() : 0);
-        result = 31 * result + (taste != null ? taste.hashCode() : 0);
-        result = 31 * result + bottleSize;
-        result = 31 * result + (alcohol != +0.0f ? Float.floatToIntBits(alcohol) : 0);
-        result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
-        result = 31 * result + stock;
-        result = 31 * result + discount;
-        result = 31 * result + (int) featured;
-        result = 31 * result + (prizesWon != null ? prizesWon.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
-        result = 31 * result + (thumb != null ? thumb.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (tasteNotes != null ? tasteNotes.hashCode() : 0);
-        return result;
-    }
-
-    @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
@@ -333,9 +274,9 @@ public class Product {
                 ", bottleSize=" + bottleSize +
                 ", alcohol=" + alcohol +
                 ", price=" + price +
+                ", oldPrice=" + oldPrice +
                 ", stock=" + stock +
                 ", discount=" + discount +
-                ", featured=" + featured +
                 ", prizesWon='" + prizesWon + '\'' +
                 ", image='" + image + '\'' +
                 ", thumb='" + thumb + '\'' +

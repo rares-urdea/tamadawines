@@ -64,7 +64,7 @@ public class ProductResource {
     @UnitOfWork
     public Product addProduct(Product product) {
         LOGGER.info("Adding product: {}", product);
-        return productDao.createProduct(product);
+        return productDao.createOrUpdate(product);
     }
 
     @POST
@@ -72,7 +72,7 @@ public class ProductResource {
     @UnitOfWork
     public Product updateProduct(Product product) {
         LOGGER.info("Updating product: {}", product);
-        return productDao.updateProduct(product);
+        return productDao.createOrUpdate(product);
     }
 
     @POST
@@ -132,7 +132,7 @@ public class ProductResource {
         for (ProductDto p : shoppingOrder.getProducts()) {
             Product current = productDao.findById(p.getId()).get();
             current.setStock(current.getStock() - p.getQuantity());
-            productDao.updateProduct(current);
+            productDao.createOrUpdate(current);
         }
 
         sellResponse = SellResponseFactory.buildSuccessResponse(shoppingOrder.getProducts());

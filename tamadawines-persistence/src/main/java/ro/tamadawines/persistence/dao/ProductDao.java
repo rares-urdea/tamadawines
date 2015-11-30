@@ -30,8 +30,8 @@ public class ProductDao extends AbstractDAO<Product> {
         return Optional.fromNullable(get(id));
     }
 
-    public Product createProduct(Product product) {
-        LOGGER.debug("Entered createProduct with target object: {}", product);
+    public Product createOrUpdate(Product product) {
+        LOGGER.debug("Entered createOrUpdate with target object: {}", product);
         return persist(product);
     }
 
@@ -41,11 +41,6 @@ public class ProductDao extends AbstractDAO<Product> {
 
     public Product findByName(String productName) {
         return uniqueResult(namedQuery("Product.findByName").setParameter("nm", productName));
-    }
-
-    public Product updateProduct(Product product) {
-        LOGGER.debug("Entered updateProduct with target object: {}", product);
-        return persist(product);
     }
 
     public boolean deleteProduct(Product product) {
