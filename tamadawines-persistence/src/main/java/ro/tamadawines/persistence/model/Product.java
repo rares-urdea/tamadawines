@@ -163,15 +163,15 @@ public class Product {
         this.price = price;
     }
 
-    private float oldPrice;
+    private Float oldPrice;
 
     @Basic
     @javax.persistence.Column(name = "oldPrice", nullable = true, insertable = true, updatable = true, precision = 0)
-    public float getOldPrice() {
+    public Float getOldPrice() {
         return oldPrice;
     }
 
-    public void setOldPrice(float oldPrice) {
+    public void setOldPrice(Float oldPrice) {
         this.oldPrice = oldPrice;
     }
 
