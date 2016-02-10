@@ -16,6 +16,7 @@ import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.dao.UserDao;
 import ro.tamadawines.persistence.model.Address;
 import ro.tamadawines.persistence.model.Counter;
+import ro.tamadawines.persistence.model.Image;
 import ro.tamadawines.persistence.model.Product;
 import ro.tamadawines.persistence.model.User;
 
@@ -32,7 +33,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     }
 
     private final HibernateBundle<TamadawinesConfiguration> hibernateBundle =
-            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class, Counter.class) {
+            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class, Counter.class, Image.class) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(TamadawinesConfiguration configuration) {
                     return configuration.getDataSourceFactory();

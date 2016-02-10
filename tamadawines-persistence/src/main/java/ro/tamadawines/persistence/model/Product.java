@@ -19,7 +19,29 @@ import javax.persistence.*;
         )
 })
 public class Product {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private String name;
+    private String subtitle;
+    private String producer;
+    private String appellation;
+    private String grapeVariety;
+    private Integer year;
+    private String colour;
+    private String taste;
+    private int bottleSize;
+    private float price;
+    private float alcohol;
+    private Float oldPrice;
+    private int stock;
+    private int discount;
+    private String prizesWon;
+    private String thumb;
+    private String description;
+    private String tasteNotes;
+    private Image image;
 
     @Id
     @javax.persistence.Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -31,8 +53,6 @@ public class Product {
         this.id = id;
     }
 
-    private String name;
-
     @Basic
     @javax.persistence.Column(name = "name", nullable = false, insertable = true, updatable = true, length = 255)
     public String getName() {
@@ -42,8 +62,6 @@ public class Product {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String subtitle;
 
     @Basic
     @javax.persistence.Column(name = "subtitle", nullable = false, insertable = true, updatable = true, length = 500)
@@ -55,8 +73,6 @@ public class Product {
         this.subtitle = subtitle;
     }
 
-    private String producer;
-
     @Basic
     @javax.persistence.Column(name = "producer", nullable = false, insertable = true, updatable = true, length = 50)
     public String getProducer() {
@@ -67,7 +83,6 @@ public class Product {
         this.producer = producer;
     }
 
-    private String appellation;
 
     @Basic
     @javax.persistence.Column(name = "appellation", nullable = false, insertable = true, updatable = true, length = 50)
@@ -79,8 +94,6 @@ public class Product {
         this.appellation = appellation;
     }
 
-    private String grapeVariety;
-
     @Basic
     @javax.persistence.Column(name = "grapeVariety", nullable = true, insertable = true, updatable = true, length = 100)
     public String getGrapeVariety() {
@@ -90,8 +103,6 @@ public class Product {
     public void setGrapeVariety(String grapeVariety) {
         this.grapeVariety = grapeVariety;
     }
-
-    private Integer year;
 
     @Basic
     @javax.persistence.Column(name = "year", nullable = true, insertable = true, updatable = true)
@@ -103,8 +114,6 @@ public class Product {
         this.year = year;
     }
 
-    private String colour;
-
     @Basic
     @javax.persistence.Column(name = "colour", nullable = false, insertable = true, updatable = true, length = 50)
     public String getColour() {
@@ -114,8 +123,6 @@ public class Product {
     public void setColour(String colour) {
         this.colour = colour;
     }
-
-    private String taste;
 
     @Basic
     @javax.persistence.Column(name = "taste", nullable = true, insertable = true, updatable = true, length = 255)
@@ -127,8 +134,6 @@ public class Product {
         this.taste = taste;
     }
 
-    private int bottleSize;
-
     @Basic
     @javax.persistence.Column(name = "bottleSize", nullable = false, insertable = true, updatable = true)
     public int getBottleSize() {
@@ -138,8 +143,6 @@ public class Product {
     public void setBottleSize(int bottleSize) {
         this.bottleSize = bottleSize;
     }
-
-    private float alcohol;
 
     @Basic
     @javax.persistence.Column(name = "alcohol", nullable = false, insertable = true, updatable = true, precision = 0)
@@ -151,8 +154,6 @@ public class Product {
         this.alcohol = alcohol;
     }
 
-    private float price;
-
     @Basic
     @javax.persistence.Column(name = "price", nullable = false, insertable = true, updatable = true, precision = 0)
     public float getPrice() {
@@ -162,8 +163,6 @@ public class Product {
     public void setPrice(float price) {
         this.price = price;
     }
-
-    private Float oldPrice;
 
     @Basic
     @javax.persistence.Column(name = "oldPrice", nullable = true, insertable = true, updatable = true, precision = 0)
@@ -175,8 +174,6 @@ public class Product {
         this.oldPrice = oldPrice;
     }
 
-    private int stock;
-
     @Basic
     @javax.persistence.Column(name = "stock", nullable = false, insertable = true, updatable = true)
     public int getStock() {
@@ -186,8 +183,6 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
-
-    private int discount;
 
     @Basic
     @javax.persistence.Column(name = "discount", nullable = false, insertable = true, updatable = true)
@@ -199,8 +194,6 @@ public class Product {
         this.discount = discount;
     }
 
-    private String prizesWon;
-
     @Basic
     @javax.persistence.Column(name = "prizesWon", nullable = false, insertable = true, updatable = true, length = 500)
     public String getPrizesWon() {
@@ -210,20 +203,6 @@ public class Product {
     public void setPrizesWon(String prizesWon) {
         this.prizesWon = prizesWon;
     }
-
-    private String image;
-
-    @Basic
-    @javax.persistence.Column(name = "image", nullable = false, insertable = true, updatable = true, length = 100)
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    private String thumb;
 
     @Basic
     @javax.persistence.Column(name = "thumb", nullable = false, insertable = true, updatable = true, length = 100)
@@ -235,8 +214,6 @@ public class Product {
         this.thumb = thumb;
     }
 
-    private String description;
-
     @Basic
     @javax.persistence.Column(name = "description", nullable = false, insertable = true, updatable = true, length = 1500)
     public String getDescription() {
@@ -247,8 +224,6 @@ public class Product {
         this.description = description;
     }
 
-    private String tasteNotes;
-
     @Basic
     @javax.persistence.Column(name = "tasteNotes", nullable = false, insertable = true, updatable = true, length = 700)
     public String getTasteNotes() {
@@ -257,6 +232,16 @@ public class Product {
 
     public void setTasteNotes(String tasteNotes) {
         this.tasteNotes = tasteNotes;
+    }
+
+    @OneToOne(targetEntity = Image.class)
+    @JoinColumn(name = "imageId", referencedColumnName = "id")
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Override
@@ -278,7 +263,6 @@ public class Product {
                 ", stock=" + stock +
                 ", discount=" + discount +
                 ", prizesWon='" + prizesWon + '\'' +
-                ", image='" + image + '\'' +
                 ", thumb='" + thumb + '\'' +
                 ", description='" + description + '\'' +
                 ", tasteNotes='" + tasteNotes + '\'' +

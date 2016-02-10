@@ -14,7 +14,7 @@ database:
   password: your-pass
 
   # the JDBC URL
-  url: jdbc:mysql://localhost:3306/tamadawines
+  url: jdbc:mysql://localhost:3306/your_DB
 
 # use the simple server factory if you only want to run on a single port
 #server:

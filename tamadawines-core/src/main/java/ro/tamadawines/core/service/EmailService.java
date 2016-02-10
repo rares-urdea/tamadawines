@@ -55,6 +55,7 @@ public class EmailService {
         } catch (MessagingException e) {
             return false;
         }
+        LOGGER.info("Email sent to: {} from: {} with sender address: {} and subject: {}", to, from, senderAddress, subject);
         return true;
     }
 }
