@@ -234,7 +234,7 @@ public class Product {
         this.tasteNotes = tasteNotes;
     }
 
-    @OneToOne(targetEntity = Image.class)
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Image.class)
     @JoinColumn(name = "imageId", referencedColumnName = "id")
     public Image getImage() {
         return image;

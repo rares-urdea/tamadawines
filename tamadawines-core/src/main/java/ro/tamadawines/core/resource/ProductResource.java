@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 
 import io.dropwizard.hibernate.UnitOfWork;
 
+import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ import ro.tamadawines.persistence.model.Product;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,22 +79,10 @@ public class ProductResource {
     @UnitOfWork
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Product addProduct(
-            @FormDataParam("product") Product product,
-            @FormDataParam("image") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition contentDisposition) {
-        LOGGER.info("Adding product: {}", product);
-
-        product = new Product();
-        product.setPrice(66);
-        product.setName("whatever");
-        product.setStock(2);
-
-        Image image = new Image();
-        image.setName("something");
-        image.setUrl(configuration.getImages().getBaseUrl() + configuration.getImages().getBucket() + "/"
-                + "whatever");
-
-        product.setImage(image);
+            @FormDataParam("product") FormDataBodyPart json,
+            @FormDataParam("image") FormDataBodyPart file) throws IOException {
+        json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+        Product product = json.getValueAs(Product.class);
         return productDao.createOrUpdate(product);
     }
 
@@ -102,7 +95,7 @@ public class ProductResource {
             @FormDataParam("image") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition contentDisposition) {
         LOGGER.info("Updating product: {}", product);
-        return addProduct(product, fileInputStream, contentDisposition);
+        return null;
     }
 
     @POST

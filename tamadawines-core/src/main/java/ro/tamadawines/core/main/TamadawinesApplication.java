@@ -2,6 +2,7 @@ package ro.tamadawines.core.main;
 
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -51,6 +52,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
             }
         });
         bootstrap.addBundle(hibernateBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
@@ -64,7 +66,6 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
         CounterDao counterDao = new CounterDao(hibernateBundle.getSessionFactory());
 
-        environment.jersey().register(MultiPartFeature.class);
         environment.jersey().register(productDao);
         environment.jersey().register(new ProductResource(productDao, counterDao, tamadawinesConfiguration));
 

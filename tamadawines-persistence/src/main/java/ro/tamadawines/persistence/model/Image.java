@@ -1,11 +1,9 @@
 package ro.tamadawines.persistence.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
+import org.hibernate.annotations.*;
+
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -31,14 +29,14 @@ import javax.persistence.Table;
 })
 public class Image {
 
+    @Id
+    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
     private String url;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
