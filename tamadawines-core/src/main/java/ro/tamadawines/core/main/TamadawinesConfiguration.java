@@ -1,6 +1,7 @@
 package ro.tamadawines.core.main;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
 
@@ -21,6 +22,11 @@ public class TamadawinesConfiguration extends Configuration {
     @NotNull
     private EmailStuff emailStuff = new EmailStuff();
 
+    @JsonProperty
+    @Valid
+    @NotNull
+    private Images images = new Images();
+
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
         return database;
@@ -33,6 +39,10 @@ public class TamadawinesConfiguration extends Configuration {
 
     public EmailStuff getEmailStuff() {
         return this.emailStuff;
+    }
+
+    public Images getImages() {
+        return images;
     }
 
     public static class EmailStuff {
@@ -59,6 +69,25 @@ public class TamadawinesConfiguration extends Configuration {
 
         public String getGmailPassword() {
             return gmailPassword;
+        }
+    }
+
+    public static class Images {
+
+        @NotNull
+        @JsonProperty
+        private String bucket;
+
+        @NotNull
+        @JsonProperty
+        private String baseUrl;
+
+        public String getBucket() {
+            return bucket;
+        }
+
+        public String getBaseUrl() {
+            return baseUrl;
         }
     }
 }

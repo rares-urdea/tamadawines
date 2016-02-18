@@ -7,6 +7,8 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+
 import ro.tamadawines.core.resource.EmailResource;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.resource.UserResource;
@@ -62,8 +64,9 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
         CounterDao counterDao = new CounterDao(hibernateBundle.getSessionFactory());
 
+        environment.jersey().register(MultiPartFeature.class);
         environment.jersey().register(productDao);
-        environment.jersey().register(new ProductResource(productDao, counterDao));
+        environment.jersey().register(new ProductResource(productDao, counterDao, tamadawinesConfiguration));
 
         environment.jersey().register(userDao);
         environment.jersey().register(new UserResource(userDao));

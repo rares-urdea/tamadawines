@@ -1,22 +1,31 @@
 package ro.tamadawines.core.resource;
 
 import com.google.common.base.Optional;
+
 import io.dropwizard.hibernate.UnitOfWork;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
 import ro.tamadawines.core.factory.SellResponseFactory;
+import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.status.model.CrudResponse;
 import ro.tamadawines.core.status.model.CrudStatus;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.model.Counter;
+import ro.tamadawines.persistence.model.Image;
 import ro.tamadawines.persistence.model.Product;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +39,13 @@ public class ProductResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
 
     private ProductDao productDao;
-
     private CounterDao counterDao;
+    private TamadawinesConfiguration configuration;
 
-    public ProductResource(ProductDao productDao, CounterDao counterDao) {
+    public ProductResource(ProductDao productDao, CounterDao counterDao, TamadawinesConfiguration configuration) {
         this.productDao = productDao;
         this.counterDao = counterDao;
+        this.configuration = configuration;
     }
 
     @GET
@@ -62,17 +72,37 @@ public class ProductResource {
     @POST
     @Path("/addProduct")
     @UnitOfWork
-    public Product addProduct(Product product) {
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Product addProduct(
+            @FormDataParam("product") Product product,
+            @FormDataParam("image") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition contentDisposition) {
         LOGGER.info("Adding product: {}", product);
+
+        product = new Product();
+        product.setPrice(66);
+        product.setName("whatever");
+        product.setStock(2);
+
+        Image image = new Image();
+        image.setName("something");
+        image.setUrl(configuration.getImages().getBaseUrl() + configuration.getImages().getBucket() + "/"
+                + "whatever");
+
+        product.setImage(image);
         return productDao.createOrUpdate(product);
     }
 
     @POST
     @Path("/updateProduct")
     @UnitOfWork
-    public Product updateProduct(Product product) {
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Product updateProduct(
+            @FormDataParam("product") Product product,
+            @FormDataParam("image") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition contentDisposition) {
         LOGGER.info("Updating product: {}", product);
-        return productDao.createOrUpdate(product);
+        return addProduct(product, fileInputStream, contentDisposition);
     }
 
     @POST

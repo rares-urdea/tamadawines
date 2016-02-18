@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
+import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.core.status.model.Status;
@@ -86,7 +87,7 @@ public class ProducResourceTest {
 
     @Before
     public void setup() {
-        productResource = new ProductResource(productDao, counterDao);
+        productResource = new ProductResource(productDao, counterDao, new TamadawinesConfiguration());
 
         when(productDao.findById(1)).thenReturn(Optional.fromNullable(productA));
         when(productDao.findById(2)).thenReturn(Optional.fromNullable(productB));

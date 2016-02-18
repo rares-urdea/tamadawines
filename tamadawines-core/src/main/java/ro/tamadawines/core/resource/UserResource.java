@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * User controller
  */
-@Path("/user")
+@Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 

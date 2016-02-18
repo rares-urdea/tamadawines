@@ -28,6 +28,10 @@ emailStuff:
   gmailUserAccount: "gmail-user"
   gmailPassword: "gmail-pass"
 
+images:
+  bucket: "your-bucket"
+  baseUrl: "https://s3-eu-west-1.amazonaws.com/"
+
 server:
 #  softNofileLimit: 1000
 #  hardNofileLimit: 1000
@@ -47,7 +51,7 @@ logging:
 
   # Specific thresholds
   loggers:
-    org.hibernate: WARN
+    org.hibernate: INFO
     ro.tamadawines.core: INFO
     ro.tamadawines.persistence: WARN
 
