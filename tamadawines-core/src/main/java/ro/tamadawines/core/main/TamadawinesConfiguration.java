@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * Created by axes on 2/22/2015.
+ * Tamadawines configuration class
  */
 public class TamadawinesConfiguration extends Configuration {
 
@@ -27,6 +27,11 @@ public class TamadawinesConfiguration extends Configuration {
     @NotNull
     private Images images = new Images();
 
+    @JsonProperty
+    @Valid
+    @NotNull
+    private AwsCredentials awsCredentials = new AwsCredentials();
+
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
         return database;
@@ -43,6 +48,10 @@ public class TamadawinesConfiguration extends Configuration {
 
     public Images getImages() {
         return images;
+    }
+
+    public AwsCredentials getAwsCredentials() {
+        return awsCredentials;
     }
 
     public static class EmailStuff {
@@ -78,16 +87,27 @@ public class TamadawinesConfiguration extends Configuration {
         @JsonProperty
         private String bucket;
 
-        @NotNull
-        @JsonProperty
-        private String baseUrl;
-
         public String getBucket() {
             return bucket;
         }
+    }
 
-        public String getBaseUrl() {
-            return baseUrl;
+    public static class AwsCredentials {
+
+        @NotNull
+        @JsonProperty
+        private String accessKey;
+
+        @NotNull
+        @JsonProperty
+        private String secretKey;
+
+        public String getAccessKey() {
+            return accessKey;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
         }
     }
 }

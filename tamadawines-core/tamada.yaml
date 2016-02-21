@@ -30,7 +30,10 @@ emailStuff:
 
 images:
   bucket: "your-bucket"
-  baseUrl: "https://s3-eu-west-1.amazonaws.com/"
+
+awsCredentials:
+  accessKey: "your_access_key"
+  secretKey: "your_secret_key"
 
 server:
 #  softNofileLimit: 1000

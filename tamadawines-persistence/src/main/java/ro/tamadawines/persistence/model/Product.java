@@ -20,8 +20,10 @@ import javax.persistence.*;
 })
 public class Product {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @javax.persistence.Column(name = "id", nullable = false, insertable = true, updatable = true)
+    private Integer id;
 
     private String name;
     private String subtitle;
@@ -41,15 +43,13 @@ public class Product {
     private String thumb;
     private String description;
     private String tasteNotes;
-    private Image image;
+    private String imageUrl;
 
-    @Id
-    @javax.persistence.Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -234,14 +234,14 @@ public class Product {
         this.tasteNotes = tasteNotes;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = Image.class)
-    @JoinColumn(name = "imageId", referencedColumnName = "id")
-    public Image getImage() {
-        return image;
+    @Basic
+    @javax.persistence.Column(name = "imageUrl", nullable = false, insertable = true, updatable = true, length = 511)
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @Override
@@ -257,8 +257,8 @@ public class Product {
                 ", colour='" + colour + '\'' +
                 ", taste='" + taste + '\'' +
                 ", bottleSize=" + bottleSize +
-                ", alcohol=" + alcohol +
                 ", price=" + price +
+                ", alcohol=" + alcohol +
                 ", oldPrice=" + oldPrice +
                 ", stock=" + stock +
                 ", discount=" + discount +
@@ -266,6 +266,46 @@ public class Product {
                 ", thumb='" + thumb + '\'' +
                 ", description='" + description + '\'' +
                 ", tasteNotes='" + tasteNotes + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+
+        Product product = (Product) o;
+
+        if (bottleSize != product.bottleSize) return false;
+        if (Float.compare(product.alcohol, alcohol) != 0) return false;
+        if (!id.equals(product.id)) return false;
+        if (!name.equals(product.name)) return false;
+        if (producer != null ? !producer.equals(product.producer) : product.producer != null) return false;
+        if (appellation != null ? !appellation.equals(product.appellation) : product.appellation != null) return false;
+        if (grapeVariety != null ? !grapeVariety.equals(product.grapeVariety) : product.grapeVariety != null) return false;
+        if (year != null ? !year.equals(product.year) : product.year != null) return false;
+        if (colour != null ? !colour.equals(product.colour) : product.colour != null) return false;
+        if (taste != null ? !taste.equals(product.taste) : product.taste != null) return false;
+        if (prizesWon != null ? !prizesWon.equals(product.prizesWon) : product.prizesWon != null) return false;
+        return !(imageUrl != null ? !imageUrl.equals(product.imageUrl) : product.imageUrl != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (producer != null ? producer.hashCode() : 0);
+        result = 31 * result + (appellation != null ? appellation.hashCode() : 0);
+        result = 31 * result + (grapeVariety != null ? grapeVariety.hashCode() : 0);
+        result = 31 * result + (year != null ? year.hashCode() : 0);
+        result = 31 * result + (colour != null ? colour.hashCode() : 0);
+        result = 31 * result + (taste != null ? taste.hashCode() : 0);
+        result = 31 * result + bottleSize;
+        result = 31 * result + (alcohol != +0.0f ? Float.floatToIntBits(alcohol) : 0);
+        result = 31 * result + (prizesWon != null ? prizesWon.hashCode() : 0);
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        return result;
     }
 }

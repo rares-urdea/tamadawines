@@ -11,6 +11,7 @@ import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.resource.ProductResource;
+import ro.tamadawines.core.service.S3UploadService;
 import ro.tamadawines.core.status.model.SellResponse;
 import ro.tamadawines.core.status.model.Status;
 import ro.tamadawines.persistence.dao.CounterDao;
@@ -51,6 +52,8 @@ public class ProducResourceTest {
     private ProductDao productDao;
     @Mock
     private CounterDao counterDao;
+    @Mock
+    private S3UploadService s3UploadService;
 
     private ProductResource productResource;
 
@@ -87,7 +90,7 @@ public class ProducResourceTest {
 
     @Before
     public void setup() {
-        productResource = new ProductResource(productDao, counterDao, new TamadawinesConfiguration());
+        productResource = new ProductResource(productDao, counterDao, new TamadawinesConfiguration(), s3UploadService);
 
         when(productDao.findById(1)).thenReturn(Optional.fromNullable(productA));
         when(productDao.findById(2)).thenReturn(Optional.fromNullable(productB));

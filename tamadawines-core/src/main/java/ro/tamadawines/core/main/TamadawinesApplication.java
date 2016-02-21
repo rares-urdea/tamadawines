@@ -1,5 +1,9 @@
 package ro.tamadawines.core.main;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3Client;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.forms.MultiPartBundle;
@@ -14,12 +18,12 @@ import ro.tamadawines.core.resource.EmailResource;
 import ro.tamadawines.core.resource.ProductResource;
 import ro.tamadawines.core.resource.UserResource;
 import ro.tamadawines.core.service.EmailService;
+import ro.tamadawines.core.service.S3UploadService;
 import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.dao.UserDao;
 import ro.tamadawines.persistence.model.Address;
 import ro.tamadawines.persistence.model.Counter;
-import ro.tamadawines.persistence.model.Image;
 import ro.tamadawines.persistence.model.Product;
 import ro.tamadawines.persistence.model.User;
 
@@ -36,7 +40,7 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
     }
 
     private final HibernateBundle<TamadawinesConfiguration> hibernateBundle =
-            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class, Counter.class, Image.class) {
+            new HibernateBundle<TamadawinesConfiguration>(User.class, Address.class, Product.class, Counter.class) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(TamadawinesConfiguration configuration) {
                     return configuration.getDataSourceFactory();
@@ -62,12 +66,17 @@ public class TamadawinesApplication extends Application<TamadawinesConfiguration
 
     @Override
     public void run(TamadawinesConfiguration tamadawinesConfiguration, Environment environment) throws Exception {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(tamadawinesConfiguration.getAwsCredentials().getAccessKey(),
+                tamadawinesConfiguration.getAwsCredentials().getSecretKey());
+        AmazonS3Client s3Client = new AmazonS3Client(awsCreds);
+        S3UploadService s3UploadService = new S3UploadService(s3Client);
+
         UserDao userDao = new UserDao(hibernateBundle.getSessionFactory());
         ProductDao productDao = new ProductDao(hibernateBundle.getSessionFactory());
         CounterDao counterDao = new CounterDao(hibernateBundle.getSessionFactory());
 
         environment.jersey().register(productDao);
-        environment.jersey().register(new ProductResource(productDao, counterDao, tamadawinesConfiguration));
+        environment.jersey().register(new ProductResource(productDao, counterDao, tamadawinesConfiguration, s3UploadService));
 
         environment.jersey().register(userDao);
         environment.jersey().register(new UserResource(userDao));
