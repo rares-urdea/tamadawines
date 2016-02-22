@@ -37,7 +37,7 @@ public class S3UploadService {
             LOGGER.error("Amazon S3 Service exception. Request made it to S3, but was rejected.");
             LOGGER.error("Raw response: {}", ase.getRawResponseContent());
             LOGGER.error("Error Message: {}", ase.getMessage());
-            LOGGER.error("HTTP Status Code: {}", ase.getStatusCode());
+            LOGGER.error("HTTP MessageWrapper Code: {}", ase.getStatusCode());
             LOGGER.error("AWS Error Code: {}", ase.getErrorCode());
             LOGGER.error("Error Type: {}", ase.getErrorType());
             LOGGER.error("Request ID: {}", ase.getRequestId());

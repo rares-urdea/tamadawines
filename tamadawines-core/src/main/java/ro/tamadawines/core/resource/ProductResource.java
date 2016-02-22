@@ -9,19 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
-import ro.tamadawines.core.factory.SellResponseFactory;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
+import ro.tamadawines.core.model.Message;
 import ro.tamadawines.core.service.S3UploadService;
-import ro.tamadawines.core.status.model.CrudResponse;
-import ro.tamadawines.core.status.model.CrudStatus;
-import ro.tamadawines.core.status.model.SellResponse;
-import ro.tamadawines.core.status.model.StatusDescriptor;
+import ro.tamadawines.core.model.MessageWrapper;
+import ro.tamadawines.core.model.SellResponse;
 import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.model.Counter;
 import ro.tamadawines.persistence.model.Product;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -59,36 +56,36 @@ public class ProductResource {
     @UnitOfWork
     @Path("/getAll")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Product> getAllProducts() {
+    public Response getAllProducts() {
         counterDao.increment(Counter.COUNTER_NAME.LISTINGS.string());
         Long count = counterDao.getByName(Counter.COUNTER_NAME.LISTINGS.string()).getValue();
         if (count % 10 == 0) {
             LOGGER.info("List call count at: {}", count);
         }
-        return productDao.findAll();
+        return Response.status(Response.Status.OK).entity(productDao.findAll()).build();
     }
 
     @GET
     @UnitOfWork
     @Path("/getByName")
     @Produces(MediaType.APPLICATION_JSON)
-    public Product getProductByName(@QueryParam("productName") String productName) {
-        return productDao.findByName(productName);
+    public Response getProductByName(@QueryParam("productName") String productName) {
+        return Response.status(Response.Status.OK).entity(productDao.findByName(productName)).build();
     }
 
     @POST
     @Path("/addProduct")
     @UnitOfWork
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Product addProduct(
+    public Response addProduct(
             @FormDataParam("product") FormDataBodyPart jsonBodyPart,
-            @FormDataParam("image") FormDataBodyPart imageBodyPart) {
+            @FormDataParam("image") FormDataBodyPart imageBodyPart) throws WebApplicationException {
 
         if (imageBodyPart == null || jsonBodyPart == null) {
             throw new WebApplicationException(
                     Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                    .entity(new StatusDescriptor("image & product form params are mandatory", 205))
-                    .build()
+                            .entity(new MessageWrapper(Message.JSON_AND_IMAGE_REQUIRED))
+                            .build()
             );
         }
 
@@ -110,18 +107,21 @@ public class ProductResource {
                 product.setImageUrl(s3UploadService.getObjectUrl(bucket, key));
             } catch (IOException e) {
                 LOGGER.error("IOException while copying image inputStream to file: {}", e.getMessage());
-                return null;
+                return Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(new MessageWrapper(Message.IMAGE_UPLOAD_FAILED)).build();
             }
         }
 
-        return productDao.createOrUpdate(product);
+        Product newEntity = productDao.createOrUpdate(product);
+        return Response.status(Response.Status.OK).entity(newEntity).build();
     }
 
     @POST
     @Path("/updateProduct")
     @UnitOfWork
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Product updateProduct(
+    public Response updateProduct(
             @FormDataParam("product") FormDataBodyPart jsonBodyPart,
             @FormDataParam("image") FormDataBodyPart imageBodyPart) {
         return addProduct(jsonBodyPart, imageBodyPart);
@@ -130,19 +130,19 @@ public class ProductResource {
     @POST
     @Path("/deleteProduct")
     @UnitOfWork
-    public CrudResponse removeProduct(Product product) {
+    public Response removeProduct(Product product) {
         LOGGER.warn("Removing product: {}", product);
         if (productDao.deleteProduct(product)) {
-            return new CrudResponse(CrudStatus.SUCCESS);
+            return Response.status(Response.Status.OK).build();
         } else {
-            return new CrudResponse(CrudStatus.FAILURE);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @POST
     @Path("/sellProducts")
     @UnitOfWork
-    public SellResponse sellProducts(ShoppingOrder shoppingOrder) {
+    public Response sellProducts(ShoppingOrder shoppingOrder) {
         LOGGER.debug("Entered sellProducts with shoppingOrder: {}", shoppingOrder);
 
         Long count = counterDao.getByName(Counter.COUNTER_NAME.SELL_SUCCESS.string()).getValue();
@@ -150,7 +150,7 @@ public class ProductResource {
             LOGGER.info("Successful SELL count at: {}", count);
         }
 
-        SellResponse sellResponse;
+        SellResponse sellResponse = new SellResponse();
         List<ProductDto> unavailableProducts = new ArrayList<>();
         Boolean hasUnavailable = false;
         Boolean availChange = false;
@@ -168,16 +168,15 @@ public class ProductResource {
             }
         }
 
-        if (hasUnavailable) {
-            sellResponse = SellResponseFactory.buildProductsNotFoundResponse(unavailableProducts);
+        if (hasUnavailable || availChange) {
+            if (hasUnavailable) {
+                sellResponse.setVerboseMessage(Message.PRODUCT_NOT_FOUND.getValue());
+            } else {
+                sellResponse.setVerboseMessage(Message.AVAILABILITY_CHANGE.getValue());
+            }
+            sellResponse.setProducts(unavailableProducts);
             counterDao.increment(Counter.COUNTER_NAME.SELL_FAILURE.string());
-            LOGGER.warn("Some products were unavailable, exiting with response: {}", sellResponse);
-            return sellResponse;
-        } else if (availChange) {
-            sellResponse = SellResponseFactory.buildAvailChangeResponse(unavailableProducts);
-            counterDao.increment(Counter.COUNTER_NAME.SELL_FAILURE.string());
-            LOGGER.warn("Avail has changed for some products, exiting with response: {}", sellResponse);
-            return sellResponse;
+            return Response.status(Response.Status.CONFLICT).entity(sellResponse).build();
         }
 
         // Assuming everything went well, sell the products.
@@ -187,9 +186,9 @@ public class ProductResource {
             productDao.createOrUpdate(current);
         }
 
-        sellResponse = SellResponseFactory.buildSuccessResponse(shoppingOrder.getProducts());
+        sellResponse.setVerboseMessage(Message.SUCCESS.getValue());
         counterDao.increment(Counter.COUNTER_NAME.SELL_SUCCESS.string());
         LOGGER.info("SELL successful, exiting with response: {}", sellResponse);
-        return sellResponse;
+        return Response.status(Response.Status.OK).entity(sellResponse).build();
     }
 }

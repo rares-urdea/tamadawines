@@ -1,4 +1,4 @@
-package ro.tamadawines.core.status.model;
+package ro.tamadawines.core.model;
 
 public enum Handling {
     RECOVERABLE("Recoverable"),

@@ -4,9 +4,9 @@ import io.dropwizard.hibernate.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
+import ro.tamadawines.core.model.Message;
 import ro.tamadawines.core.service.EmailService;
-import ro.tamadawines.core.status.model.Status;
-import ro.tamadawines.core.status.model.StatusDescriptor;
+import ro.tamadawines.core.model.MessageWrapper;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.GET;
@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
@@ -36,47 +37,34 @@ public class EmailResource {
     @GET
     @UnitOfWork
     @Path("/contactForm")
-    public StatusDescriptor sendContactUsEmail(@QueryParam("senderEmail") String senderEmail,
+    public Response sendContactUsEmail(@QueryParam("senderEmail") String senderEmail,
                                                @QueryParam("senderName") String senderName,
                                                @QueryParam("body") String body,
                                                @QueryParam("subject") String subject) {
-
         String adminAddress = configuration.getEmailStuff().getAdminAddress();
-
-        try {
-            if (emailService.sendEmail(adminAddress, adminAddress, senderEmail, subject, body)) {
-                LOGGER.info("ContactUs request sent by: {}", senderEmail);
-                return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
-            }
-        } catch (IOException | MessagingException e) {
-            LOGGER.error("sendContactUsEmail failed with IOException | MessagingException: {}", e.getMessage());
-            return Status.EMAIL_EXCEPTION.getStatusDescriptor();
-        }
-        LOGGER.error("sendContactUsEmail failed utterly");
-        return Status.UTTER_FAILURE.getStatusDescriptor();
+        return sendEmail(senderEmail, body, adminAddress, subject);
     }
 
     @GET
     @UnitOfWork
     @Path("/sendMail")
-    public StatusDescriptor sendEmail(@QueryParam("senderEmail") String senderEmail,
+    public Response sendEmail(@QueryParam("senderEmail") String senderEmail,
                                       @QueryParam("body") String body,
                                       @QueryParam("recipientAddress") String recipientAddress,
                                       @QueryParam("subject") String subject) {
 
         String adminAddress = configuration.getEmailStuff().getAdminAddress();
-
         try {
             if (emailService.sendEmail(recipientAddress, adminAddress, senderEmail, subject, body)) {
                 LOGGER.info("sendEmail request by: {} with subject: {} and recipient address: {}",
                         senderEmail, subject, recipientAddress);
-                return Status.OPERATION_SUCCESSFUL.getStatusDescriptor();
+                return Response.status(Response.Status.OK).entity(new MessageWrapper(Message.SUCCESS)).build();
             }
         } catch (IOException | MessagingException e) {
             LOGGER.error("sendEmail failed with IOException | MessagingException: {}", e.getMessage());
-            return Status.EMAIL_EXCEPTION.getStatusDescriptor();
+            return Response.status(Response.Status.OK).entity(new MessageWrapper(Message.EMAIL_EXCEPTION)).build();
         }
         LOGGER.error("sendEmail failed utterly");
-        return Status.UTTER_FAILURE.getStatusDescriptor();
+        return Response.status(Response.Status.OK).entity(new MessageWrapper(Message.UTTER_FAILURE)).build();
     }
 }
