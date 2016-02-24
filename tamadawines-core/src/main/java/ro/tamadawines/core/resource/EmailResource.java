@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.model.Message;
-import ro.tamadawines.core.service.EmailService;
 import ro.tamadawines.core.model.MessageWrapper;
+import ro.tamadawines.core.service.EmailService;
 
 import javax.mail.MessagingException;
 import javax.ws.rs.GET;

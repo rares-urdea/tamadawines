@@ -4,12 +4,12 @@ import ro.tamadawines.core.dto.ProductDto;
 
 import java.util.List;
 
-public class SellResponse {
+public class SellResponseWrapper {
 
     private String verboseMessage;
     private List<ProductDto> products;
 
-    public SellResponse() {
+    public SellResponseWrapper() {
     }
 
     public String getVerboseMessage() {

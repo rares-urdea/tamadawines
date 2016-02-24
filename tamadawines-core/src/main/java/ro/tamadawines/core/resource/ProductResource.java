@@ -11,9 +11,9 @@ import ro.tamadawines.core.dto.ProductDto;
 import ro.tamadawines.core.dto.ShoppingOrder;
 import ro.tamadawines.core.main.TamadawinesConfiguration;
 import ro.tamadawines.core.model.Message;
-import ro.tamadawines.core.service.S3UploadService;
 import ro.tamadawines.core.model.MessageWrapper;
-import ro.tamadawines.core.model.SellResponse;
+import ro.tamadawines.core.model.SellResponseWrapper;
+import ro.tamadawines.core.service.S3UploadService;
 import ro.tamadawines.persistence.dao.CounterDao;
 import ro.tamadawines.persistence.dao.ProductDao;
 import ro.tamadawines.persistence.model.Counter;
@@ -150,7 +150,7 @@ public class ProductResource {
             LOGGER.info("Successful SELL count at: {}", count);
         }
 
-        SellResponse sellResponse = new SellResponse();
+        SellResponseWrapper sellResponseWrapper = new SellResponseWrapper();
         List<ProductDto> unavailableProducts = new ArrayList<>();
         Boolean hasUnavailable = false;
         Boolean availChange = false;
@@ -170,13 +170,13 @@ public class ProductResource {
 
         if (hasUnavailable || availChange) {
             if (hasUnavailable) {
-                sellResponse.setVerboseMessage(Message.PRODUCT_NOT_FOUND.getValue());
+                sellResponseWrapper.setVerboseMessage(Message.PRODUCT_NOT_FOUND.getValue());
             } else {
-                sellResponse.setVerboseMessage(Message.AVAILABILITY_CHANGE.getValue());
+                sellResponseWrapper.setVerboseMessage(Message.AVAILABILITY_CHANGE.getValue());
             }
-            sellResponse.setProducts(unavailableProducts);
+            sellResponseWrapper.setProducts(unavailableProducts);
             counterDao.increment(Counter.COUNTER_NAME.SELL_FAILURE.string());
-            return Response.status(Response.Status.CONFLICT).entity(sellResponse).build();
+            return Response.status(Response.Status.CONFLICT).entity(sellResponseWrapper).build();
         }
 
         // Assuming everything went well, sell the products.
@@ -186,9 +186,9 @@ public class ProductResource {
             productDao.createOrUpdate(current);
         }
 
-        sellResponse.setVerboseMessage(Message.SUCCESS.getValue());
+        sellResponseWrapper.setVerboseMessage(Message.SUCCESS.getValue());
         counterDao.increment(Counter.COUNTER_NAME.SELL_SUCCESS.string());
-        LOGGER.info("SELL successful, exiting with response: {}", sellResponse);
-        return Response.status(Response.Status.OK).entity(sellResponse).build();
+        LOGGER.info("SELL successful, exiting with response: {}", sellResponseWrapper);
+        return Response.status(Response.Status.OK).entity(sellResponseWrapper).build();
     }
 }

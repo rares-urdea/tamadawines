@@ -6,6 +6,7 @@ import ro.tamadawines.persistence.model.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -25,22 +26,22 @@ public class UserResource {
     @UnitOfWork
     @Path("/getAll")
     @Produces("application/json")
-    public List<User> getAllUsers() {
-        return userDao.findAll();
+    public Response getAll() {
+        return Response.status(Response.Status.OK).entity(userDao.findAll()).build();
     }
 
     @GET
     @UnitOfWork
     @Path("/fn")
-    public User getUserByFirstName(@QueryParam("firstName") String firstName) {
-        return userDao.findByFirstName(firstName);
+    public Response getByFirstName(@QueryParam("firstName") String firstName) {
+        return Response.status(Response.Status.OK).entity(userDao.findByFirstName(firstName)).build();
     }
 
     @GET
     @UnitOfWork
     @Path("/ln")
-    public User getUserByLastName(@QueryParam("lastName") String lastName) {
-        return userDao.findByFirstName(lastName);
+    public Response getByLastName(@QueryParam("lastName") String lastName) {
+        return Response.status(Response.Status.OK).entity(userDao.findByFirstName(lastName)).build();
     }
 
     @POST
@@ -48,7 +49,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @UnitOfWork
-    public User createUser(User user) {
-        return userDao.createUser(user);
+    public Response create(User user) {
+        return Response.status(Response.Status.OK).entity(userDao.createUser(user)).build();
     }
 }

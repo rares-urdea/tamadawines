@@ -2,6 +2,7 @@ package ro.tamadawines.core.model;
 
 public enum Message {
     SUCCESS("Operation successful", 200),
+    ALREADY_SUBSCRIBED("This email address is already subscriber", 201),
     UTTER_FAILURE("Something failed horribly. Blame Rajesh.", 401),
     EMAIL_EXCEPTION("Email Service Error - IOException || MessagingException", 402),
     AVAILABILITY_CHANGE("Availability has changed while you were slacking off. Move quick or die fast.", 301),
