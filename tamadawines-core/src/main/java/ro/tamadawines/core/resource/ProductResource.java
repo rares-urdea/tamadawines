@@ -81,10 +81,10 @@ public class ProductResource {
             @FormDataParam("product") FormDataBodyPart jsonBodyPart,
             @FormDataParam("image") FormDataBodyPart imageBodyPart) throws WebApplicationException {
 
-        if (imageBodyPart == null || jsonBodyPart == null) {
+        if (jsonBodyPart == null) {
             throw new WebApplicationException(
                     Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                            .entity(new MessageWrapper(Message.JSON_AND_IMAGE_REQUIRED))
+                            .entity(new MessageWrapper(Message.JSON_REQUIRED))
                             .build()
             );
         }
@@ -93,23 +93,25 @@ public class ProductResource {
         Product product = jsonBodyPart.getValueAs(Product.class);
         LOGGER.info("Adding new product: {}", product);
 
-        String bucket = configuration.getImages().getBucket();
-        String key = imageBodyPart.getContentDisposition().getFileName();
-        if (s3UploadService.objectExists(bucket, key)) {
-            product.setImageUrl(s3UploadService.getObjectUrl(bucket, key));
-            LOGGER.warn("Image \"{}\" already exists in S3", key);
-        } else {
-            try {
-                InputStream inputStream = imageBodyPart.getValueAs(InputStream.class);
-                File tempFile = new File(IMG_TMP);
-                FileUtils.copyInputStreamToFile(inputStream, tempFile);
-                s3UploadService.uploadFileToS3(tempFile, bucket, key);
+        if (imageBodyPart != null) {
+            String bucket = configuration.getImages().getBucket();
+            String key = imageBodyPart.getContentDisposition().getFileName();
+            if (s3UploadService.objectExists(bucket, key)) {
                 product.setImageUrl(s3UploadService.getObjectUrl(bucket, key));
-            } catch (IOException e) {
-                LOGGER.error("IOException while copying image inputStream to file: {}", e.getMessage());
-                return Response
-                        .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .entity(new MessageWrapper(Message.IMAGE_UPLOAD_FAILED)).build();
+                LOGGER.warn("Image \"{}\" already exists in S3", key);
+            } else {
+                try {
+                    InputStream inputStream = imageBodyPart.getValueAs(InputStream.class);
+                    File tempFile = new File(IMG_TMP);
+                    FileUtils.copyInputStreamToFile(inputStream, tempFile);
+                    s3UploadService.uploadFileToS3(tempFile, bucket, key);
+                    product.setImageUrl(s3UploadService.getObjectUrl(bucket, key));
+                } catch (IOException e) {
+                    LOGGER.error("IOException while copying image inputStream to file: {}", e.getMessage());
+                    return Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(new MessageWrapper(Message.IMAGE_UPLOAD_FAILED)).build();
+                }
             }
         }
 

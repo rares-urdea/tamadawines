@@ -235,7 +235,7 @@ public class Product {
     }
 
     @Basic
-    @javax.persistence.Column(name = "imageUrl", nullable = false, insertable = true, updatable = true, length = 511)
+    @javax.persistence.Column(name = "imageUrl", nullable = true, insertable = true, updatable = true, length = 511)
     public String getImageUrl() {
         return imageUrl;
     }
